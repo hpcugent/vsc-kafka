@@ -38,7 +38,7 @@ from vsc.install.shared_setup import ag, sdw
 install_requires = [
     'vsc-base >= 3.2.4',
     'vsc-utils >= 2.1.0',
-    'kafka',
+    'kafka-python',
 ]
 
 
