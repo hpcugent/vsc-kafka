@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-##
+#
 # Copyright 2023-2023 Ghent University
 #
 # This file is part of vsc-kafka,
@@ -9,7 +8,7 @@
 # the Flemish Research Foundation (FWO) (http://www.fwo.be/en)
 # and the Department of Economy, Science and Innovation (EWI) (http://www.ewi-vlaanderen.be/en).
 #
-# http://github.com/hpcugent/vsc-kafka
+# https://github.com/hpcugent/vsc-kafka
 #
 # vsc-kafka is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Library General Public License as
@@ -23,35 +22,9 @@
 #
 # You should have received a copy of the GNU Library General Public License
 # along with vsc-utils. If not, see <http://www.gnu.org/licenses/>.
-##
+#
 """
-vsc-kafka base distribution setup.py
-
-@author: Stijn De Weirdt (Ghent University)
-@author: Andy Georges (Ghent University)
+Allow other packages to extend this namespace, zip safe setuptools style
 """
-import sys
-
-import vsc.install.shared_setup as shared_setup
-from vsc.install.shared_setup import ag, sdw
-
-install_requires = [
-    'vsc-base >= 3.2.4',
-    'vsc-utils >= 2.1.0',
-    'kafka',
-]
-
-
-PACKAGE = {
-    'version': '0.1.0',
-    'author': [ag, sdw],
-    'maintainer': [ag, sdw],
-    'excluded_pkgs_rpm': ['vsc'],  # vsc is default, vsc.utils is provided by vsc-base
-    'tests_require': ['mock'],
-    'install_requires': install_requires,
-    'setup_requires': ['vsc-install >= 0.15.1'],
-    'zip_safe': False,
-}
-
-if __name__ == '__main__':
-    shared_setup.action_target(PACKAGE)
+import pkg_resources
+pkg_resources.declare_namespace(__name__)
