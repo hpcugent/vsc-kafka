@@ -58,11 +58,6 @@ def make_time(ts, fmt="%Y-%m-%d", begin=False, end=False):
     return datetime.strftime(dt, fmt)
 
 
-class Ingestor(Enum):
-    slurm = 'slurm'
-    openstack = 'openstack'
-    cloudresourcespecs = 'cloudresourcespecs'
-
 
 class KafkaCLI(NrpeCLI):
     """
