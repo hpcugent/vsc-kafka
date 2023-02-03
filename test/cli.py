@@ -1,17 +1,16 @@
-#!/usr/bin/env python
-##
-# Copyright 2023-2023 Ghent University
 #
-# This file is part of vsc-kafka,
+# Copyright 2021-2023 Ghent University
+#
+# This file is part of vsc-utils,
 # originally created by the HPC team of Ghent University (http://ugent.be/hpc/en),
 # with support of Ghent University (http://ugent.be/hpc),
 # the Flemish Supercomputer Centre (VSC) (https://www.vscentrum.be),
 # the Flemish Research Foundation (FWO) (http://www.fwo.be/en)
 # and the Department of Economy, Science and Innovation (EWI) (http://www.ewi-vlaanderen.be/en).
 #
-# http://github.com/hpcugent/vsc-kafka
+# https://github.com/hpcugent/vsc-utils
 #
-# vsc-kafka is free software: you can redistribute it and/or modify
+# vsc-utils is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Library General Public License as
 # published by the Free Software Foundation, either version 2 of
 # the License, or (at your option) any later version.
@@ -23,35 +22,25 @@
 #
 # You should have received a copy of the GNU Library General Public License
 # along with vsc-utils. If not, see <http://www.gnu.org/licenses/>.
-##
+#
 """
-vsc-kafka base distribution setup.py
-
-@author: Stijn De Weirdt (Ghent University)
-@author: Andy Georges (Ghent University)
+xdmod tests
 """
-import sys
+import logging
 
-import vsc.install.shared_setup as shared_setup
-from vsc.install.shared_setup import ag, sdw
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
 
-install_requires = [
-    'vsc-base >= 3.2.4',
-    'vsc-utils >= 2.1.0',
-    'kafka-python',
-]
+from vsc.utils.cli import make_time
 
+from vsc.install.testing import TestCase
 
-PACKAGE = {
-    'version': '0.1.0',
-    'author': [ag, sdw],
-    'maintainer': [ag, sdw],
-    'excluded_pkgs_rpm': ['vsc'],  # vsc is default, vsc.utils is provided by vsc-base
-    'tests_require': ['mock'],
-    'install_requires': install_requires,
-    'setup_requires': ['vsc-install >= 0.15.1'],
-    'zip_safe': False,
-}
+class TestSlurm(TestCase):
 
-if __name__ == '__main__':
-    shared_setup.action_target(PACKAGE)
+    def test_make_time(self):
+        ts = '1933142400'  # TZ=UTC date -d 2031-04-05T08:00:00 +%s
+        self.assertEqual(make_time(ts), '2031-04-05')
+        self.assertEqual(make_time(ts, fmt='%Y-%m-%dT%H:%M:%S'), '2031-04-05T08:00:00')
+        self.assertEqual(make_time(ts, fmt='%Y-%m-%dT%H:%M:%S', begin=True), '2031-04-05T00:00:00')
+        self.assertEqual(make_time(ts, fmt='%Y-%m-%dT%H:%M:%S', end=True), '2031-04-05T23:59:59')
+
