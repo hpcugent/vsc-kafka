@@ -43,7 +43,7 @@ install_requires = [
 
 
 PACKAGE = {
-    'version': '0.1.2',
+    'version': '0.1.3',
     'author': [ag, sdw],
     'maintainer': [ag, sdw],
     'excluded_pkgs_rpm': ['vsc'],  # vsc is default, vsc.utils is provided by vsc-base
