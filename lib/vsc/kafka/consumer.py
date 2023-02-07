@@ -93,7 +93,7 @@ class ConsumerCLI(KafkaCLI):
         logging.debug("Starting to iterate over messages")
         # we do not expect this loop to end, i.e., we keep polling
         for msg in consumer:
-            event = self.process_msg(msg)
+            event = self.convert_msg(msg)
 
             if event is not None:
                 try:
