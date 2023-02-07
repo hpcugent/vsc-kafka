@@ -20,7 +20,7 @@ import logging
 logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
 
-from vsc.utils.cli import make_time
+from vsc.kafka.cli import make_time
 
 from vsc.install.testing import TestCase
 
