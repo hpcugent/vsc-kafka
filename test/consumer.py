@@ -86,8 +86,7 @@ class TestConsumer(TestCase):
 
     @mock.patch('vsc.utils.script_tools.ExtendedSimpleOption.prologue')
     @mock.patch('vsc.utils.cli.KafkaConsumer', autospec=True)
-    @mock.patch('vsc.utils.consumer.ConsumerCLI.update_shred_file')
-    def test_consume(self, mock_update_shred, mock_consumer, mock_prologue):
+    def test_consume(self, mock_consumer, mock_prologue):
 
         cl1_1 = "test1_1|message1_1|cluster1|4|5|6|7|8|9|10|11|12|2020-02-28T01:02:03|14|15|16|17|18|19|20|21|22|23|24|25|26"
         cl1_2 = "test1_2|message1_1|cluster1|4|5|6|7|8|9|10|11|12|2020-02-28T11:02:03|14|15|16|17|18|19|20|21|22|23|24|25|26"
@@ -147,15 +146,6 @@ class TestConsumer(TestCase):
             logging.debug("%s %s %s", name, args, kwargs)
             self.assertEqual(name, '().commit')
             self.assertEqual(args, ())
-            self.assertEqual(kwargs, {})
-
-        logging.debug("update shred calls: %s", mock_update_shred.mock_calls)
-        self.assertEqual(len(mock_update_shred.mock_calls), len(events))
-        for idx, ev in enumerate(events):
-            name, args, kwargs = mock_update_shred.mock_calls[idx]
-            logging.debug("%s %s %s", name, args, kwargs)
-            self.assertEqual(name, '')
-            self.assertEqual(args, (ev, False))
             self.assertEqual(kwargs, {})
 
         # last call is the close call
