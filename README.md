@@ -2,17 +2,10 @@
 
 Code to deal with kafka
 
-Originally created by the HPC team of Ghent University (http://ugent.be/hpc).
-
-
-### Build Status
-- Python 3.6 : [![Build Status](https://jenkins1.ugent.be/job/vsc-kafka-python36/badge/icon)](https://jenkins1.ugent.be/job/vsc-kafka-python36/)
-
-# Documentation
-https://jenkins1.ugent.be/job/vsc-kafka-python36/Documentation/
+Originally created by the HPC team of Ghent University (https://www.ugent.be/hpc).
 
 # License
-All rights reserved.
+GNU Public License v2
 
 # Acknowledgements
 vsc-kafka was created with support of [Ghent University](http://www.ugent.be/en),
