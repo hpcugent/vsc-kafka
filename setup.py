@@ -16,7 +16,7 @@
 # published by the Free Software Foundation, either version 2 of
 # the License, or (at your option) any later version.
 #
-# vsc-utils is distributed in the hope that it will be useful,
+# vsc-kafka is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU Library General Public License for more details.
@@ -30,7 +30,6 @@ vsc-kafka base distribution setup.py
 @author: Stijn De Weirdt (Ghent University)
 @author: Andy Georges (Ghent University)
 """
-import sys
 
 import vsc.install.shared_setup as shared_setup
 from vsc.install.shared_setup import ag, sdw
@@ -43,7 +42,7 @@ install_requires = [
 
 
 PACKAGE = {
-    'version': '0.1.5',
+    'version': '0.1.6',
     'author': [ag, sdw],
     'maintainer': [ag, sdw],
     'excluded_pkgs_rpm': ['vsc'],  # vsc is default, vsc.utils is provided by vsc-base
