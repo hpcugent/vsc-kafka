@@ -204,7 +204,7 @@ class ConsumerCLI(KafkaCLI):
             kwargs["consumer_timeout_ms"] = self.options.timeout
 
         # disable auto commit, so dry-run doesn't commit
-        kwargs.setdefault('enable_auto_commit', False)
+        kwargs.setdefault('enable_auto_commit', not self.options.dry_run)  # no autocommit is we dry-run
 
         return kwargs
 
@@ -243,7 +243,7 @@ class ConsumerCLI(KafkaCLI):
 
         def consumer_close():
             # default is autocommit=True, which is not ok wrt dry_run
-            consumer.close(autocommit=False)
+            consumer.close(autocommit=(not dry_run))
 
             total = sum([sum(d.values()) for r in self.stats.values() for d in r.values()])
             logging.info("All %s messages retrieved (dry_run=%s): %s", total, dry_run, self.stats)
