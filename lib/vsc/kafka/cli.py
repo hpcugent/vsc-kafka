@@ -64,8 +64,8 @@ class KafkaCLI(NrpeCLI):
                   "strlist", "store", []),
     }
 
-    def __init__(self, *kwargs):
-        super(KafkaCLI, self).__init__(*kwargs)
+    def __init__(self, **kwargs):
+        super(KafkaCLI, self).__init__(**kwargs)
         self.stats = {}
 
 
