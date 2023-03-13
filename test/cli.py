@@ -20,7 +20,7 @@ import mock
 import sys
 import json
 
-from collections import namedtuple 
+from collections import namedtuple
 
 
 logging.basicConfig()
@@ -105,7 +105,7 @@ class TestConsumer(TestCase):
             'ssl2': 'sslv2',
             'sasl1': 'saslv1',
             'sasl2': 'sslv2',
-            'enable_auto_commit': False,
+            'enable_auto_commit': True,
         })
 
         # next call is the __iter__ call for the loop
@@ -128,4 +128,4 @@ class TestConsumer(TestCase):
         logging.debug("%s %s %s", name, args, kwargs)
         self.assertEqual(name, '().close')
         self.assertEqual(args, ())
-        self.assertEqual(kwargs, {'autocommit': False})
+        self.assertEqual(kwargs, {'autocommit': True})
