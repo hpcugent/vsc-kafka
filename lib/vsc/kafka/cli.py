@@ -65,14 +65,14 @@ class KafkaCLI(NrpeCLI):
     }
 
     def __init__(self, **kwargs):
-        super(KafkaCLI, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.stats = {}
 
 
 
     def make_options(self, defaults=None):
         self.CLI_OPTIONS.update(self.KAFKA_COMMON_OPTIONS)
-        return super(KafkaCLI, self).make_options(defaults=defaults)
+        return super().make_options(defaults=defaults)
 
     def get_kafka_kwargs(self):
         """Generate the kafka producer or consumer args"""
@@ -111,7 +111,7 @@ class ProducerCLI(KafkaCLI):
         if delta >= max_delta:
             logging.error("Delta %s between start %s and end %s is more than max_delta %s",
                           delta, start, end, max_delta)
-            raise Exception("Max start end timedelta exceeded")
+            raise ValueError("Max start end timedelta exceeded")
 
     def _start_end_datetime(self):
         """return start and end datetime tuple"""
@@ -139,7 +139,7 @@ class ProducerCLI(KafkaCLI):
 
     def make_options(self, defaults=None):
         self.CLI_OPTIONS.update(self.KAFKA_COMMON_PRODUCER_OPTIONS)
-        return super(ProducerCLI, self).make_options(defaults=defaults)
+        return super().make_options(defaults=defaults)
 
     def make_day(self, event):
         """Return datetime instance associated with event"""
@@ -192,13 +192,13 @@ class ConsumerCLI(KafkaCLI):
 
     def make_options(self, defaults=None):
         self.CLI_OPTIONS.update(self.CONSUMER_CLI_OPTIONS)
-        return super(ConsumerCLI, self).make_options(defaults=defaults)
+        return super().make_options(defaults=defaults)
 
 
     def get_kafka_kwargs(self):
         """Generate the kafka producer or consumer args"""
 
-        kwargs = super(ConsumerCLI, self).get_kafka_kwargs()
+        kwargs = super().get_kafka_kwargs()
 
         if self.options.timeout is not None:
             kwargs["consumer_timeout_ms"] = self.options.timeout
@@ -234,7 +234,6 @@ class ConsumerCLI(KafkaCLI):
         """
         To be implemented in subclasses
         """
-        pass
 
     def do(self, dry_run):
         """Consume data from kafka"""
@@ -243,7 +242,7 @@ class ConsumerCLI(KafkaCLI):
 
         def consumer_close():
             # default is autocommit=True, which is not ok wrt dry_run
-            consumer.close(autocommit=(not dry_run))
+            consumer.close(autocommit=not dry_run)
 
             total = sum([sum(d.values()) for r in self.stats.values() for d in r.values()])
             logging.info("All %s messages retrieved (dry_run=%s): %s", total, dry_run, self.stats)
