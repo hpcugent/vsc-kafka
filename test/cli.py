@@ -16,7 +16,7 @@
 xdmod tests
 """
 import logging
-import mock
+import unittest.mock
 import sys
 import json
 

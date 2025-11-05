@@ -46,29 +46,31 @@ def make_time(ts, fmt="%Y-%m-%d", begin=False, end=False):
     return datetime.strftime(dt, fmt)
 
 
-
 class KafkaCLI(NrpeCLI):
     """
     Base class for Kafka based NrpeCLI clients
     """
+
     KAFKA_COMMON_OPTIONS = {
-        'topic': ("Kafka topics to produce/consume", None, "store", "xdmod"),
-        'brokers': ("List of kafka brokers, comma separated", "strlist", "store", None),
-        'security_protocol': ("Security protocol to use, e.g., SASL_SSL", str, "store", "PLAINTEXT"),
-        'ssl': ("Comma-separated key=value list of SSL options for underlying kafka lib", "strlist", "store", []),
-        'sasl': ("Comma-separated key=value list of SASL options for the underlying kafka lib", "strlist", "store", []),
+        "topic": ("Kafka topics to produce/consume", None, "store", "xdmod"),
+        "brokers": ("List of kafka brokers, comma separated", "strlist", "store", None),
+        "security_protocol": ("Security protocol to use, e.g., SASL_SSL", str, "store", "PLAINTEXT"),
+        "ssl": ("Comma-separated key=value list of SSL options for underlying kafka lib", "strlist", "store", []),
+        "sasl": ("Comma-separated key=value list of SASL options for the underlying kafka lib", "strlist", "store", []),
         # Very advanced/dangerous usage:
         # e.g. on initial usage of consumer, pass --kafka=auto_offset_reset=earliest
         #    to start from the earliest offset in abscence of (first) commit
-        'kafka': ("Comma-separated key=value list of allowed options for the underlying kafka lib",
-                  "strlist", "store", []),
+        "kafka": (
+            "Comma-separated key=value list of allowed options for the underlying kafka lib",
+            "strlist",
+            "store",
+            [],
+        ),
     }
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.stats = {}
-
-
 
     def make_options(self, defaults=None):
         self.CLI_OPTIONS.update(self.KAFKA_COMMON_OPTIONS)
@@ -76,21 +78,17 @@ class KafkaCLI(NrpeCLI):
 
     def get_kafka_kwargs(self):
         """Generate the kafka producer or consumer args"""
-        kwargs = dict(map(lambda kv: kv.split('='), self.options.ssl + self.options.sasl + self.options.kafka))
+        kwargs = dict(map(lambda kv: kv.split("="), self.options.ssl + self.options.sasl + self.options.kafka))
 
-        kwargs['bootstrap_servers'] = self.options.brokers
-        kwargs['security_protocol'] = self.options.security_protocol
+        kwargs["bootstrap_servers"] = self.options.brokers
+        kwargs["security_protocol"] = self.options.security_protocol
 
         return kwargs
 
     def make_consumer(self, group):
         """Return consumer instance for specific topic and group"""
 
-        return KafkaConsumer(
-            self.options.topic,
-            group_id=group,
-            **self.get_kafka_kwargs()
-        )
+        return KafkaConsumer(self.options.topic, group_id=group, **self.get_kafka_kwargs())
 
 
 class ProducerCLI(KafkaCLI):
@@ -99,8 +97,8 @@ class ProducerCLI(KafkaCLI):
     START_END_TIME_FORMAT = None
 
     KAFKA_COMMON_PRODUCER_OPTIONS = {
-        'end_timestamp': ("End time for events (default now)", str, "store", None),
-        'max_delta': ("Maximum number of days between start and end time", str, "store", 7),
+        "end_timestamp": ("End time for events (default now)", str, "store", None),
+        "max_delta": ("Maximum number of days between start and end time", str, "store", 7),
     }
 
     def check_time(self):
@@ -109,8 +107,9 @@ class ProducerCLI(KafkaCLI):
         max_delta = timedelta(days=float(self.options.max_delta))
         logging.debug("check_time start %s end %s delta %s max_delta %s", start, end, delta, max_delta)
         if delta >= max_delta:
-            logging.error("Delta %s between start %s and end %s is more than max_delta %s",
-                          delta, start, end, max_delta)
+            logging.error(
+                "Delta %s between start %s and end %s is more than max_delta %s", delta, start, end, max_delta
+            )
             raise ValueError("Max start end timedelta exceeded")
 
     def _start_end_datetime(self):
@@ -148,19 +147,16 @@ class ProducerCLI(KafkaCLI):
     def produce_value(self, resource, event):
         """Pass event, return dict to produce"""
         return {
-            'payload': event,
-            'resource': resource,
-            'type': self.PRODUCER_TYPE.value,
-            'day': datetime.strftime(self.make_day(event), "%Y%m%d"),
+            "payload": event,
+            "resource": resource,
+            "type": self.PRODUCER_TYPE.value,
+            "day": datetime.strftime(self.make_day(event), "%Y%m%d"),
         }
 
     def produce(self, resource, events, dry_run):
         """Produce the events of resource into kafka topic PRODUCER_TOPIC"""
 
-        producer = KafkaProducer(
-            acks='all',
-            **self.get_kafka_kwargs()
-        )
+        producer = KafkaProducer(acks="all", **self.get_kafka_kwargs())
 
         logging.info("%s events for resource %s to send to topic %s", len(events), resource, self.options.topic)
         for event in events:
@@ -168,7 +164,7 @@ class ProducerCLI(KafkaCLI):
             if dry_run:
                 logging.debug("Dry run: would send to topic %s: %s", self.options.topic, value)
             else:
-                producer.send(topic=self.options.topic, value=json.dumps(value, sort_keys=True).encode('utf8'))
+                producer.send(topic=self.options.topic, value=json.dumps(value, sort_keys=True).encode("utf8"))
 
     def get_resource_events(self):
         """Return list of (resource, events) pairs"""
@@ -186,14 +182,13 @@ class ConsumerCLI(KafkaCLI):
     """Consume data from kafka topics and prepare it as xdmod shred file input"""
 
     CONSUMER_CLI_OPTIONS = {
-        'group': ("Kafka consumer group", None, "store", "xdmod"),
-        'timeout': ('Kafka consumer timeout in ms. If not set, loops forever', int, "store", None),
+        "group": ("Kafka consumer group", None, "store", "xdmod"),
+        "timeout": ("Kafka consumer timeout in ms. If not set, loops forever", int, "store", None),
     }
 
     def make_options(self, defaults=None):
         self.CLI_OPTIONS.update(self.CONSUMER_CLI_OPTIONS)
         return super().make_options(defaults=defaults)
-
 
     def get_kafka_kwargs(self):
         """Generate the kafka producer or consumer args"""
@@ -204,7 +199,7 @@ class ConsumerCLI(KafkaCLI):
             kwargs["consumer_timeout_ms"] = self.options.timeout
 
         # disable auto commit, so dry-run doesn't commit
-        kwargs.setdefault('enable_auto_commit', not self.options.dry_run)  # no autocommit is we dry-run
+        kwargs.setdefault("enable_auto_commit", not self.options.dry_run)  # no autocommit is we dry-run
 
         return kwargs
 
@@ -221,7 +216,7 @@ class ConsumerCLI(KafkaCLI):
                 logging.error("Failed to load as JSON: %s", value)
                 return None
 
-            if 'payload' in event:
+            if "payload" in event:
                 return event
             else:
                 logging.error("Payload missing from event %s", event)
@@ -238,7 +233,6 @@ class ConsumerCLI(KafkaCLI):
     def do(self, dry_run):
         """Consume data from kafka"""
         consumer = self.make_consumer(self.options.group)
-
 
         def consumer_close():
             # default is autocommit=True, which is not ok wrt dry_run
