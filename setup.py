@@ -31,26 +31,25 @@ vsc-kafka base distribution setup.py
 @author: Andy Georges (Ghent University)
 """
 
-import vsc.install.shared_setup as shared_setup
+from vsc.install import shared_setup
 from vsc.install.shared_setup import ag, sdw
 
 install_requires = [
-    'vsc-base >= 3.2.4',
-    'vsc-utils >= 2.1.0',
-    'kafka-python',
+    "vsc-base >= 3.2.4",
+    "vsc-utils >= 2.1.0",
+    "kafka-python",
 ]
 
 
 PACKAGE = {
-    'version': '0.1.8',
-    'author': [ag, sdw],
-    'maintainer': [ag, sdw],
-    'excluded_pkgs_rpm': ['vsc'],  # vsc is default, vsc.utils is provided by vsc-base
-    'tests_require': ['mock'],
-    'install_requires': install_requires,
-    'setup_requires': ['vsc-install >= 0.15.1'],
-    'zip_safe': False,
+    "version": "0.1.10",
+    "author": [ag, sdw],
+    "maintainer": [ag, sdw],
+    "excluded_pkgs_rpm": ["vsc"],  # vsc is default, vsc.utils is provided by vsc-base
+    "install_requires": install_requires,
+    "setup_requires": ["vsc-install >= 0.15.1"],
+    "zip_safe": False,
 }
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     shared_setup.action_target(PACKAGE)
